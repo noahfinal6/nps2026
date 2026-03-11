@@ -7,182 +7,159 @@ import { motion } from "framer-motion"
 import { useState, useEffect } from 'react'
 
 export function HeroSection() {
-  const slideshowImages = [
-    '/images/1.jpg',
-    '/images/3.jpg',
-    '/images/8.jpg',
-    '/images/DSC_7264.jpg',
-    '/images/IMG_0165.jpg',
-    '/images/IMG_0178%20(1).jpg'
-  ]
+	const slideshowImages = [
+		'/images/optimized/1.jpg',
+		'/images/optimized/3.jpg',
+		'/images/optimized/8.jpg',
+		'/images/optimized/DSC_7264.jpg',
+		'/images/optimized/IMG_0165.jpg',
+		'/images/optimized/IMG_0178 (1).jpg'
+	]
 
-  const [currentIndex, setCurrentIndex] = useState(0)
+	const [currentIndex, setCurrentIndex] = useState(0)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((p) => (p + 1) % slideshowImages.length)
-    }, 6000)
-    return () => clearInterval(interval)
-  }, [])
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setCurrentIndex((p) => (p + 1) % slideshowImages.length)
+		}, 6000)
+		return () => clearInterval(interval)
+	}, [])
 
-  return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden" style={{
-      background: `linear-gradient(135deg, #016633 0%, #CC3300 100%)`,
-    }}>
-      {/* Background Slideshow will render below (full-bleed) */}
+	const currentBg = slideshowImages[currentIndex]
 
-      {/* Gradient overlay above images */}
-      <div className="absolute inset-0 z-10 pointer-events-none" style={{
-        background: `linear-gradient(135deg, #016633 0%, #CC3300 100%)`,
-        mixBlendMode: 'overlay',
-      }} />
+	return (
+		<section
+			className="relative min-h-[90vh] flex items-center overflow-hidden"
+			style={{
+				backgroundImage: `linear-gradient(135deg, rgba(1,102,51,0.92) 0%, rgba(204,51,0,0.85) 100%), url('${currentBg}')`,
+				backgroundSize: 'cover',
+				backgroundPosition: 'center top',
+				backgroundRepeat: 'no-repeat',
+			}}
+		>
+			{/* Bottom Fade */}
+			<div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20" />
 
-      {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20" />
+			{/* Content */}
+			<div className="container mx-auto px-4 relative z-30 py-20">
+				<div className="flex flex-col lg:flex-row items-start lg:items-center gap-12">
+					<div className="max-w-4xl flex-1">
+						{/* Date/Location Badge */}
+						<motion.div
+							initial={{ opacity: 0, x: -20 }}
+							animate={{ opacity: 1, x: 0 }}
+							transition={{ duration: 0.4 }}
+							className="inline-flex items-center gap-4 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white font-mono text-sm mb-8 backdrop-blur-sm"
+							style={{ willChange: 'opacity, transform' }}
+						>
+							<span className="flex items-center gap-2">
+								<Calendar className="w-4 h-4" />
+								15-16 July 2026
+							</span>
+							<span className="w-1 h-1 rounded-full bg-white/50" />
+							<span className="flex items-center gap-2">
+								<MapPin className="w-4 h-4" />
+								Abuja, Nigeria
+							</span>
+						</motion.div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 relative z-20 py-20">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-12">
-          <div className="max-w-4xl flex-1">
-          {/* Date/Location Badge */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-4 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white font-mono text-sm mb-8 backdrop-blur-sm"
-            style={{ willChange: 'opacity, transform' }}
-          >
-            <span className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              15-16 July 2026
-            </span>
-            <span className="w-1 h-1 rounded-full bg-white/50" />
-            <span className="flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
-              Abuja, Nigeria
-            </span>
-          </motion.div>
+						{/* Main Heading */}
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5, delay: 0.05 }}
+							style={{ willChange: 'opacity, transform' }}
+						>
+							<h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter mb-6">
+								<span className="text-gray-400">Own Your</span> <br />
+								<span className="text-white">
+									Retirement.
+								</span>
+							</h1>
+						</motion.div>
 
+						{/* Subtitle */}
+						<motion.p
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5, delay: 0.1 }}
+							className="text-xl md:text-2xl text-gray-200 font-medium max-w-2xl mb-10 leading-relaxed font-mono"
+							style={{ willChange: 'opacity, transform' }}
+						>
+							From Planning to Action. Join Africa&apos;s premier platform for retirement readiness, financial security, and post-career productivity.
+						</motion.p>
 
+						{/* CTA Buttons */}
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5, delay: 0.15 }}
+							className="flex flex-col sm:flex-row gap-4"
+							style={{ willChange: 'opacity, transform' }}
+						>
+							<Link
+								href="/register"
+								className="bg-white hover:bg-white/90 text-slate-900 px-8 py-4 rounded-xl font-bold text-lg text-center shadow-xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group"
+							>
+								Register Now
+								<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+							</Link>
+							<Link
+								href="/program"
+								className="bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/30 px-8 py-4 rounded-xl font-bold text-lg text-center transition-all hover:-translate-y-1"
+							>
+								View Program
+							</Link>
+						</motion.div>
+					</div>
 
-          {/* Main Heading */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-            style={{ willChange: 'opacity, transform' }}
-          >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter mb-6">
-              <span className="text-gray-400">Own Your</span> <br />
-              <span className="text-white">
-                Retirement.
-              </span>
-            </h1>
-          </motion.div>
+					{/* Right Side: NPS 2026 Logo and Year */}
+					<motion.div
+						initial={{ opacity: 0, x: 30 }}
+						animate={{ opacity: 1, x: 0 }}
+						transition={{ duration: 0.6, delay: 0.3 }}
+						className="hidden lg:flex flex-col items-center gap-4 h-full justify-center"
+					>
+						<h2 className="relative z-20 text-5xl md:text-6xl lg:text-7xl font-black text-amber-300 leading-none">2026</h2>
+						<div className="max-w-[36rem] w-full max-h-[48vh] mx-auto flex items-center justify-center mt-0 relative z-10 overflow-hidden">
+							<Image
+								src="/images/logos/optimized/NPSlogoWhite.webp"
+								alt="NPS 2026 logo"
+								width={704}
+								height={704}
+								className="object-contain max-h-full w-auto"
+								priority
+							/>
+						</div>
+						<div className="max-w-[28rem] w-full max-h-[10vh] mx-auto flex items-center justify-center">
+							<Image
+								src="/images/logos/optimized/TRHL.webp"
+								alt="TRHL"
+								width={400}
+								height={120}
+								className="object-contain max-h-full w-auto"
+							/>
+						</div>
+					</motion.div>
+				</div>
+			</div>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-xl md:text-2xl text-gray-200 font-medium max-w-2xl mb-10 leading-relaxed font-mono"
-            style={{ willChange: 'opacity, transform' }}
-          >
-            From Planning to Action. Join Africa&apos;s premier platform for retirement readiness, financial security, and post-career productivity.
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="flex flex-col sm:flex-row gap-4"
-            style={{ willChange: 'opacity, transform' }}
-          >
-            <Link
-              href="/register"
-              className="bg-white hover:bg-white/90 text-slate-900 px-8 py-4 rounded-xl font-bold text-lg text-center shadow-xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group"
-            >
-              Register Now
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/program"
-              className="bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/30 px-8 py-4 rounded-xl font-bold text-lg text-center transition-all hover:-translate-y-1"
-            >
-              View Program
-            </Link>
-          </motion.div>
-          </div>
-
-          {/* Right Side: NPS 2026 Logo and Year */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="hidden lg:flex flex-col items-center gap-2"
-          >
-            <h2 className="relative z-20 text-6xl md:text-7xl font-black text-amber-300 leading-none">2026</h2>
-            <div className="w-96 h-96 mx-auto flex items-center justify-center -mt-8 relative z-10">
-              <Image
-                src="/images/logos/NPSlogoWhite.png"
-                alt="NPS 2026 logo"
-                width={384}
-                height={384}
-                className="object-contain w-full h-full"
-                priority
-              />
-            </div>
-            <div className="mt-2 w-48 h-auto mx-auto">
-              <Image
-                src="/images/logos/TRHL.png"
-                alt="TRHL"
-                width={192}
-                height={64}
-                className="object-contain w-full h-auto"
-              />
-            </div>
-          </motion.div>
-
-          {/* Slideshow images absolute stack (full-viewport bleed regardless of container) */}
-          <div className="absolute left-1/2 top-0 transform -translate-x-1/2 w-screen h-full -z-20">
-            {slideshowImages.map((src, i) => (
-              <div key={src} className="absolute left-0 top-0 w-full h-full">
-                <Image
-                  src={src}
-                  alt={`background-${i}`}
-                  fill
-                  className="object-cover w-full h-full"
-                  style={{
-                    opacity: currentIndex === i ? 0.16 : 0,
-                    transition: 'opacity 1s ease-in-out'
-                  }}
-                  loading={currentIndex === i ? 'eager' : 'lazy'}
-                  priority={currentIndex === i}
-                  quality={60}
-                  sizes="100vw"
-                />
-              </div>
-            ))}
-
-            {/* indicator dots (bottom center) */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-0">
-              <div className="flex gap-2 justify-center">
-                {slideshowImages.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentIndex(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      idx === currentIndex ? 'w-8 bg-emerald-400' : 'w-2 bg-white/30 hover:bg-white/50'
-                    }`}
-                    aria-label={`Go to slide ${idx + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
+			{/* Slide indicator (bottom center) */}
+			<div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">
+				<div className="flex gap-2 justify-center">
+					{slideshowImages.map((_, idx) => (
+						<button
+							key={idx}
+							onClick={() => setCurrentIndex(idx)}
+							className={`h-2 rounded-full transition-all duration-300 ${
+								idx === currentIndex ? 'w-8 bg-emerald-400' : 'w-2 bg-white/30 hover:bg-white/50'
+							}`}
+							aria-label={`Go to slide ${idx + 1}`}
+						/>
+					))}
+				</div>
+			</div>
+		</section>
+	)
 }
+

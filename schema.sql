@@ -56,3 +56,5 @@ CREATE TRIGGER update_registrations_updated_at
     BEFORE UPDATE ON registrations
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+
+for i in range ()

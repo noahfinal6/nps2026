@@ -6,16 +6,16 @@ import { ArrowRight } from "lucide-react"
 
 export function PreviousSummits() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-gradient-to-b from-emerald-50 via-amber-100 to-orange-50">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row gap-16 items-center">
+        <div className="flex flex-col lg:flex-row gap-16 items-stretch">
           {/* Left Side: Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:w-1/2"
+            className="lg:w-1/2 lg:h-[520px] flex flex-col justify-center"
           >
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
               Building on Success
@@ -68,24 +68,24 @@ export function PreviousSummits() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:w-1/2 relative"
+            className="lg:w-1/2 relative lg:h-[520px]"
           >
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 h-full">
               <div
-                className="rounded-2xl shadow-xl w-full h-64 bg-cover bg-center mt-8"
+                className="rounded-2xl shadow-xl w-full h-full bg-cover bg-center"
                 style={{
-                  backgroundImage: `url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600&q=80')`,
+                  backgroundImage: `url('/images/optimized/IMG_0165.jpg')`,
                 }}
               />
               <div
-                className="rounded-2xl shadow-xl w-full h-64 bg-cover bg-center"
+                className="rounded-2xl shadow-xl w-full h-full bg-cover bg-center"
                 style={{
-                  backgroundImage: `url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80')`,
+                  backgroundImage: `url('/images/optimized/IMG_0178 (1).jpg')`,
                 }}
               />
             </div>
             {/* Background decoration */}
-            <div className="absolute -inset-4 bg-emerald-100/50 rounded-[2rem] -z-10 transform rotate-3" />
+            <div className="absolute -inset-4 bg-emerald-100/30 rounded-[2rem] -z-10 transform rotate-3" />
           </motion.div>
         </div>
       </div>

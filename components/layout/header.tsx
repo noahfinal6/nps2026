@@ -42,11 +42,11 @@ export function Header() {
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between py-4">
-        {/* Logo: two side-by-side images (no padding) + title */}
+        {/* Logo: optimized images side-by-side + title (no subtitle) */}
         <Link href="/" className="flex items-center gap-3 cursor-pointer group">
           <div className="flex items-center gap-2 h-12">
             <Image
-              src="/images/logos/XEMConsultantsLtdLogo.png"
+              src="/images/logos/optimized/XEMConsultantsLtdLogo.webp"
               alt="XEM Consultants Ltd"
               height={48}
               width={180}
@@ -54,7 +54,7 @@ export function Header() {
               priority
             />
             <Image
-              src="/images/logos/NRSicon.png"
+              src="/images/logos/optimized/NRSicon.webp"
               alt="NRS Icon"
               height={48}
               width={48}
@@ -65,9 +65,6 @@ export function Header() {
           <div className="flex flex-col items-start">
             <span className="text-2xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors tracking-tighter leading-none">
               NPS<span className="text-orange-600">2026</span>
-            </span>
-            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
-              XEM Consultants Ltd
             </span>
           </div>
         </Link>
