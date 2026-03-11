@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, X, ChevronDown } from "lucide-react"
 
 const navLinks = [
@@ -41,13 +42,26 @@ export function Header() {
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between py-4">
-        {/* Logo */}
+        {/* Logo: two side-by-side images (no padding) + title */}
         <Link href="/" className="flex items-center gap-3 cursor-pointer group">
-          <img 
-            src="https://pulocfsnftbohjbwqbhv.supabase.co/storage/v1/object/public/images/npclogo.png"
-            alt="NPC Logo"
-            className="w-12 h-12 object-contain"
-          />
+          <div className="flex items-center gap-2 h-12">
+            <Image
+              src="/images/logos/XEMConsultantsLtdLogo.png"
+              alt="XEM Consultants Ltd"
+              height={48}
+              width={180}
+              className="h-full w-auto object-contain"
+              priority
+            />
+            <Image
+              src="/images/logos/NRSicon.png"
+              alt="NRS Icon"
+              height={48}
+              width={48}
+              className="h-full w-auto object-contain"
+              priority
+            />
+          </div>
           <div className="flex flex-col items-start">
             <span className="text-2xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors tracking-tighter leading-none">
               NPS<span className="text-orange-600">2026</span>
