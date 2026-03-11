@@ -1,0 +1,187 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { Menu, X, ChevronDown } from "lucide-react"
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About NPS" },
+  {
+    label: "History",
+    children: [
+      { href: "/history/2024", label: "2024 Summit" },
+      { href: "/history/2025", label: "2025 Summit" },
+    ],
+  },
+  { href: "/program", label: "NPS2026" },
+  { href: "/speakers", label: "Speakers" },
+  { href: "/partners", label: "Partners" },
+]
+
+export function Header() {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  return (
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/95 backdrop-blur-md shadow-lg"
+          : "bg-white"
+      }`}
+    >
+      <div className="container mx-auto px-4 flex items-center justify-between py-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-3 cursor-pointer group">
+          <img 
+            src="https://pulocfsnftbohjbwqbhv.supabase.co/storage/v1/object/public/images/npclogo.png"
+            alt="NPC Logo"
+            className="w-12 h-12 object-contain"
+          />
+          <div className="flex flex-col items-start">
+            <span className="text-2xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors tracking-tighter leading-none">
+              NPS<span className="text-orange-600">2026</span>
+            </span>
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
+              XEM Consultants Ltd
+            </span>
+          </div>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-12 flex-1 justify-end mr-8">
+          {navLinks.map((link) =>
+            link.children ? (
+              <div
+                key={link.label}
+                className="relative group"
+                onMouseEnter={() => setActiveDropdown(link.label)}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <button className="flex items-center gap-1 text-sm font-bold uppercase tracking-wide text-slate-800 hover:text-orange-600 transition-colors">
+                  {link.label}
+                  <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                </button>
+                <div
+                  className={`absolute top-full left-0 pt-2 transition-all duration-200 ${
+                    activeDropdown === link.label
+                      ? "opacity-100 visible translate-y-0"
+                      : "opacity-0 invisible -translate-y-2"
+                  }`}
+                >
+                  <div className="bg-white shadow-xl border border-gray-200 rounded-xl py-2 min-w-[180px]">
+                    {link.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="block px-4 py-2 text-sm font-medium text-slate-700 hover:text-orange-600 hover:bg-gray-50 transition-colors"
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href!}
+                className="text-sm font-bold uppercase tracking-wide text-slate-800 hover:text-orange-600 transition-colors"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
+        </nav>
+
+        {/* CTA Button */}
+        <Link
+          href="/register"
+          className="hidden lg:block bg-emerald-600 text-white px-8 py-3 rounded-lg text-sm font-bold tracking-wide uppercase shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:bg-red-600 transition-all duration-300"
+        >
+          Register Now
+        </Link>
+
+        {/* Mobile Menu Toggle */}
+        <button
+          className="lg:hidden p-2 text-slate-800 hover:text-orange-600 transition-colors"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <div
+        className={`lg:hidden overflow-hidden transition-all duration-300 ${
+          isMobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <nav className="container mx-auto px-4 py-4 flex flex-col gap-2 bg-white border-t border-gray-200">
+          {navLinks.map((link) =>
+            link.children ? (
+              <div key={link.label} className="flex flex-col">
+                <button
+                  className="flex items-center justify-between py-3 text-sm font-bold uppercase tracking-wide text-slate-800"
+                  onClick={() =>
+                    setActiveDropdown(activeDropdown === link.label ? null : link.label)
+                  }
+                >
+                  {link.label}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      activeDropdown === link.label ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-200 ${
+                    activeDropdown === link.label ? "max-h-40" : "max-h-0"
+                  }`}
+                >
+                  {link.children.map((child) => (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      className="block py-2 pl-4 text-sm font-medium text-slate-600 hover:text-orange-600 border-l-2 border-gray-200 hover:border-orange-600 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href!}
+                className="py-3 text-sm font-bold uppercase tracking-wide text-slate-800 hover:text-orange-600 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            )
+          )}
+          <Link
+            href="/register"
+            className="mt-4 bg-emerald-600 text-white px-6 py-3 rounded-lg text-sm font-bold tracking-wide uppercase text-center shadow-lg shadow-emerald-600/30 hover:bg-red-600 transition-all"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Register Now
+          </Link>
+        </nav>
+      </div>
+    </header>
+  )
+}

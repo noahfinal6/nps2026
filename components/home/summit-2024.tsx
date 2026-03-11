@@ -1,0 +1,143 @@
+"use client"
+
+import Link from "next/link"
+import { motion } from "framer-motion"
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import { useState, useEffect } from "react"
+
+const summitImages = [
+  "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80",
+  "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
+  "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
+  "https://images.unsplash.com/photo-1552664884-8d440ca09e8f?w=800&q=80",
+  "https://images.unsplash.com/photo-1552664888-8fe59e2d62b6?w=800&q=80",
+]
+
+export function Summit2024() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % summitImages.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const goToPrevious = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + summitImages.length) % summitImages.length)
+  }
+
+  const goToNext = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % summitImages.length)
+  }
+
+  return (
+    <section 
+      className="py-12 relative overflow-hidden"
+      style={{
+        background: `linear-gradient(135deg, #016633 0%, #CC3300 100%)`,
+      }}
+    >
+      {/* Background Image Overlay */}
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center opacity-15 mix-blend-overlay"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80')`,
+        }}
+      />
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+          {/* Left Side: Image Carousel */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:w-1/2 relative"
+          >
+            <div className="relative h-[500px] overflow-hidden shadow-2xl">
+              {/* Main Image */}
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-all duration-500"
+                style={{ backgroundImage: `url('${summitImages[currentImageIndex]}')` }}
+              />
+
+              {/* Navigation Buttons */}
+              <button
+                onClick={goToPrevious}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center backdrop-blur-md transition-colors border border-white/30"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="w-6 h-6 text-white" />
+              </button>
+
+              <button
+                onClick={goToNext}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center backdrop-blur-md transition-colors border border-white/30"
+                aria-label="Next image"
+              >
+                <ChevronRight className="w-6 h-6 text-white" />
+              </button>
+
+              {/* Image Indicators */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                {summitImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === currentImageIndex
+                        ? "w-8 bg-white"
+                        : "w-2 bg-white/50 hover:bg-white/75"
+                    }`}
+                    aria-label={`Go to image ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Side: Description */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:w-1/2 flex flex-col justify-start"
+          >
+            <div className="mb-6 flex items-center gap-4">
+              <span className="text-6xl md:text-7xl font-black text-white">2024</span>
+              <div className="h-20 w-1 bg-gradient-to-b from-white to-transparent"></div>
+            </div>
+
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
+              The Genesis: Nigeria's First National Pre-Retirement Summit
+            </h2>
+
+            <div className="space-y-6 mb-10">
+              <p className="text-lg text-white/90 leading-relaxed">
+                The 2024 National Pre-Retirement Summit marked a historic turning point in Nigeria's approach to retirement readiness. Bringing together over 1,000 engaged participants from government agencies, private sector organizations, and civil society groups, the summit created an unprecedented platform for dialogue on retirement security and post-career productivity.
+              </p>
+
+              <p className="text-lg text-white/90 leading-relaxed">
+                This inaugural edition established the Three-Pillar Framework with comprehensive strategies addressing financial planning, healthcare security, and productive post-retirement engagement. It bridged the policy-citizen gap by connecting policymakers directly with citizens to understand retirement challenges and co-develop practical solutions, while showcasing investment opportunities for personal financial management and strategic planning.
+              </p>
+            </div>
+
+            <div className="flex gap-4">
+              <Link
+                href="/history/2024"
+                className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-xl font-bold hover:bg-white/90 transition-colors group"
+              >
+                Explore Full Details
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </motion.div>
+
+
+        </div>
+      </div>
+    </section>
+  )
+}
