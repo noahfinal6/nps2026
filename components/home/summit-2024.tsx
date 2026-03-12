@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 import { optimized2024 } from '@/lib/optimizedImages'
 
@@ -12,10 +12,7 @@ const summitImages = optimized2024
 export function Summit2024() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const carouselRef = useRef<HTMLDivElement | null>(null)
-  const textRef = useRef<HTMLDivElement | null>(null)
-  const [scale, setScale] = useState(1)
-  const [carouselHeight, setCarouselHeight] = useState<number | null>(null)
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,25 +21,7 @@ export function Summit2024() {
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
-    function update() {
-      const ch = carouselRef.current?.clientHeight ?? 0
-      setCarouselHeight(ch)
-      if (!textRef.current) return
-      const th = textRef.current.scrollHeight
-      const newScale = th > ch && ch > 0 ? ch / th : 1
-      setScale(newScale)
-    }
-
-    update()
-    const ro = new ResizeObserver(update)
-    if (carouselRef.current) ro.observe(carouselRef.current)
-    window.addEventListener('resize', update)
-    return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', update)
-    }
-  }, [currentImageIndex])
+  // Layout relies on responsive flexbox; no manual height/scale sync needed
 
   const goToPrevious = () => {
     setCurrentImageIndex((prev) => (prev - 1 + summitImages.length) % summitImages.length)
@@ -76,7 +55,7 @@ export function Summit2024() {
             transition={{ duration: 0.6 }}
             className="w-full lg:w-1/2 relative"
           >
-            <div ref={carouselRef} className="relative h-[500px] overflow-hidden shadow-2xl">
+            <div className="relative h-[500px] overflow-hidden shadow-2xl">
               {/* Main Image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-all duration-500"
@@ -126,36 +105,34 @@ export function Summit2024() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="w-full lg:w-1/2 flex flex-col justify-start"
           >
-            <div style={{ height: carouselHeight ? `${carouselHeight}px` : undefined }} className="overflow-hidden mb-6">
-              <div ref={textRef} style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }}>
-                <div className="mb-6 flex items-center gap-4">
-                  <span className="text-6xl md:text-7xl font-black text-white">2024</span>
-                  <div className="h-20 w-1 bg-gradient-to-b from-white to-transparent"></div>
-                </div>
+            <div className="mb-6">
+              <div className="mb-6 flex items-center gap-4">
+                <span className="text-6xl md:text-7xl font-black text-white">2024</span>
+                <div className="h-20 w-1 bg-gradient-to-b from-white to-transparent"></div>
+              </div>
 
-                <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
-                  The Genesis: Nigeria's First National Pre-Retirement Summit
-                </h2>
+              <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
+                The Genesis: Nigeria's First National Pre-Retirement Summit
+              </h2>
 
-                <div className="space-y-6 mb-10">
-                  <p className="text-lg text-white/90 leading-relaxed">
-                    The 2024 National Pre-Retirement Summit marked a historic turning point in Nigeria's approach to retirement readiness. Bringing together over 1,000 engaged participants from government agencies, private sector organizations, and civil society groups, the summit created an unprecedented platform for dialogue on retirement security and post-career productivity.
-                  </p>
+              <div className="space-y-6 mb-10">
+                <p className="text-lg text-white/90 leading-relaxed">
+                  The 2024 National Pre-Retirement Summit marked a historic turning point in Nigeria's approach to retirement readiness. Bringing together over 1,000 engaged participants from government agencies, private sector organizations, and civil society groups, the summit created an unprecedented platform for dialogue on retirement security and post-career productivity.
+                </p>
 
-                  <p className="text-lg text-white/90 leading-relaxed">
-                    This inaugural edition established the Three-Pillar Framework with comprehensive strategies addressing financial planning, healthcare security, and productive post-retirement engagement. It bridged the policy-citizen gap by connecting policymakers directly with citizens to understand retirement challenges and co-develop practical solutions, while showcasing investment opportunities for personal financial management and strategic planning.
-                  </p>
-                </div>
+                <p className="text-lg text-white/90 leading-relaxed">
+                  This inaugural edition established the Three-Pillar Framework with comprehensive strategies addressing financial planning, healthcare security, and productive post-retirement engagement. It bridged the policy-citizen gap by connecting policymakers directly with citizens to understand retirement challenges and co-develop practical solutions, while showcasing investment opportunities for personal financial management and strategic planning.
+                </p>
+              </div>
 
-                <div className="flex gap-4">
-                  <Link
-                    href="/history/2024"
-                    className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-xl font-bold hover:bg-white/90 transition-colors group"
-                  >
-                    Explore Full Details
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
+              <div className="flex gap-4">
+                <Link
+                  href="/history/2024"
+                  className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-xl font-bold hover:bg-white/90 transition-colors group"
+                >
+                  Explore Full Details
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </div>
           </motion.div>

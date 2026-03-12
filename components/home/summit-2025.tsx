@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 import { optimized2025 } from '@/lib/optimizedImages'
 
@@ -12,10 +12,7 @@ const summitImages = optimized2025
 export function Summit2025() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const carouselRef = useRef<HTMLDivElement | null>(null)
-  const textRef = useRef<HTMLDivElement | null>(null)
-  const [scale, setScale] = useState(1)
-  const [carouselHeight, setCarouselHeight] = useState<number | null>(null)
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,25 +21,7 @@ export function Summit2025() {
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
-    function update() {
-      const ch = carouselRef.current?.clientHeight ?? 0
-      setCarouselHeight(ch)
-      if (!textRef.current) return
-      const th = textRef.current.scrollHeight
-      const newScale = th > ch && ch > 0 ? ch / th : 1
-      setScale(newScale)
-    }
-
-    update()
-    const ro = new ResizeObserver(update)
-    if (carouselRef.current) ro.observe(carouselRef.current)
-    window.addEventListener('resize', update)
-    return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', update)
-    }
-  }, [currentImageIndex])
+  // Layout relies on responsive flexbox; no manual height/scale sync needed
 
   const goToPrevious = () => {
     setCurrentImageIndex((prev) => (prev - 1 + summitImages.length) % summitImages.length)
@@ -76,7 +55,7 @@ export function Summit2025() {
             transition={{ duration: 0.6 }}
             className="w-full lg:w-1/2 relative"
           >
-            <div ref={carouselRef} className="relative h-[500px] overflow-hidden shadow-2xl">
+            <div className="relative h-[500px] overflow-hidden shadow-2xl">
               {/* Main Image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-all duration-500"
@@ -126,35 +105,33 @@ export function Summit2025() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="w-full lg:w-1/2 flex flex-col justify-start"
           >
-            <div style={{ height: carouselHeight ? `${carouselHeight}px` : undefined }} className="overflow-hidden mb-6">
-              <div ref={textRef} style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }}>
-                <div className="mb-6 flex items-center gap-4">
-                  <span className="text-6xl md:text-7xl font-black text-white">2025</span>
-                  <div className="h-20 w-1 bg-gradient-to-b from-white to-transparent"></div>
-                </div>
+            <div className="mb-6">
+              <div className="mb-6 flex items-center gap-4">
+                <span className="text-6xl md:text-7xl font-black text-white">2025</span>
+                <div className="h-20 w-1 bg-gradient-to-b from-white to-transparent"></div>
+              </div>
 
-                <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
-                  Pan-African Expansion: Scaling Retirement Excellence
-                </h2>
+              <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
+                Pan-African Expansion: Scaling Retirement Excellence
+              </h2>
 
-                <div className="space-y-6">
-                  <p className="text-lg text-white/90 leading-relaxed">
-                    The 2025 National Pre-Retirement Summit expanded its continental reach with unprecedented participation from West African nations. Hosted at the ECOWAS Commission Secretariat in Abuja, this edition demonstrated the universal relevance of retirement preparedness and the power of regional cooperation in addressing shared economic challenges.
-                  </p>
+              <div className="space-y-6">
+                <p className="text-lg text-white/90 leading-relaxed">
+                  The 2025 National Pre-Retirement Summit expanded its continental reach with unprecedented participation from West African nations. Hosted at the ECOWAS Commission Secretariat in Abuja, this edition demonstrated the universal relevance of retirement preparedness and the power of regional cooperation in addressing shared economic challenges.
+                </p>
 
-                  <p className="text-lg text-white/90 leading-relaxed">
-                    This continental edition featured network building across West Africa, establishing ongoing knowledge-sharing networks, while exploring emerging sector opportunities in smart agriculture, renewable energy, and cross-border trade that leverage retirement assets. It showcased how retirement planning connects to broader development goals, positioning retirees as economic agents and community catalysts for sustainable growth.
-                  </p>
+                <p className="text-lg text-white/90 leading-relaxed">
+                  This continental edition featured network building across West Africa, establishing ongoing knowledge-sharing networks, while exploring emerging sector opportunities in smart agriculture, renewable energy, and cross-border trade that leverage retirement assets. It showcased how retirement planning connects to broader development goals, positioning retirees as economic agents and community catalysts for sustainable growth.
+                </p>
 
-                  <div className="flex gap-4">
-                    <Link
-                      href="/history/2025"
-                      className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-xl font-bold hover:bg-white/90 transition-colors group"
-                    >
-                      Explore Full Details
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
+                <div className="flex gap-4">
+                  <Link
+                    href="/history/2025"
+                    className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-xl font-bold hover:bg-white/90 transition-colors group"
+                  >
+                    Explore Full Details
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
                 </div>
               </div>
             </div>
