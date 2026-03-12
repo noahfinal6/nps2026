@@ -66,7 +66,12 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://pulocfsnftbohjbwqbhv.supabase.co" />
+        {/* Explicit favicon links to ensure browsers use the provided icon */}
         <link rel="icon" href="/icon-dark-32x32.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon-dark-32x32.png" />
+        <link rel="shortcut icon" href="/icon-dark-32x32.png" />
+        <link rel="mask-icon" href="/icon.svg" color="#016633" />
+        <meta name="theme-color" content="#016633" />
       </head>
       <body className={`${montserrat.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} font-sans antialiased`}>
         {children}
