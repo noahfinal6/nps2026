@@ -225,7 +225,7 @@ export default function Program2026Page() {
                 </p>
                 <a
                   href="/register"
-                  className="inline-block bg-emerald-600 hover:bg-red-600 text-white px-8 py-4 rounded-lg font-bold text-lg shadow-xl transition-all hover:-translate-y-1"
+                  className="inline-block bg-emerald-600 hover:bg-red-600 text-white px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-lg font-bold text-base sm:text-lg shadow-xl transition-all hover:-translate-y-1"
                 >
                   Register Now
                 </a>

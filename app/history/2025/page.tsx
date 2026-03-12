@@ -112,17 +112,17 @@ export default function History2025Page() {
             </ul>
 
             {/* Navigation */}
-            <div className="border-t border-border pt-8 mt-8 flex justify-between">
+            <div className="border-t border-border pt-8 mt-8 flex flex-col sm:flex-row sm:justify-between gap-3">
               <Link
                 href="/history/2024"
-                className="inline-flex items-center gap-2 bg-muted text-secondary px-6 py-3 rounded-xl font-bold hover:bg-muted/80 transition-colors"
+                className="inline-flex items-center gap-2 bg-muted text-secondary px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold hover:bg-muted/80 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 View 2024 Summit
               </Link>
               <Link
                 href="/program"
-                className="inline-flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-xl font-bold hover:bg-accent/90 transition-colors shadow-lg"
+                className="inline-flex items-center gap-2 bg-accent text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold hover:bg-accent/90 transition-colors shadow-lg"
               >
                 View 2026 Program
                 <ArrowLeft className="w-4 h-4 rotate-180" />

@@ -62,7 +62,7 @@ export default function SpeakersPage() {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all h-full"
                   >
-                    <div className="w-full h-64 bg-gray-100 flex-shrink-0 overflow-hidden">
+                    <div className="w-full h-48 sm:h-64 bg-gray-100 flex-shrink-0 overflow-hidden">
                       <img
                         src={speaker.image}
                         alt={speaker.name}

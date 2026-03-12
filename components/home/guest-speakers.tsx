@@ -41,7 +41,7 @@ const SpeakerCard = memo(({ speaker, currentIndex, index }: { speaker: any; curr
     className="flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-white/10 transition-colors h-full"
     style={{ willChange: 'opacity' }}
   >
-    <div className="w-full h-64 bg-gray-700 flex-shrink-0 overflow-hidden">
+    <div className="w-full h-48 sm:h-64 bg-gray-700 flex-shrink-0 overflow-hidden">
       <Image
         src={speaker.image}
         alt={speaker.name}
@@ -90,7 +90,7 @@ export function GuestSpeakers() {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header Section */}
-        <div className="flex justify-between items-start mb-12">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -98,10 +98,10 @@ export function GuestSpeakers() {
             transition={{ duration: 0.4 }}
             style={{ willChange: 'opacity, transform' }}
           >
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4">
               Guest Speakers.
             </h2>
-            <p className="text-lg text-gray-300 max-w-md">
+            <p className="text-base md:text-lg text-gray-300 max-w-md">
               Hear from the policymakers, industry leaders, and experts shaping Africa&apos;s retirement landscape.
             </p>
           </motion.div>
@@ -115,7 +115,7 @@ export function GuestSpeakers() {
           >
             <Link
               href="/speakers"
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-bold backdrop-blur-md transition-colors border border-white/20 group"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold backdrop-blur-md transition-colors border border-white/20 group text-sm sm:text-base"
             >
               Meet All the Speakers
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
