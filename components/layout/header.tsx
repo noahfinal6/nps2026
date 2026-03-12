@@ -44,18 +44,15 @@ export function Header() {
       <div className="container mx-auto px-4 flex flex-wrap items-center justify-between py-4">
         {/* Logo: optimized images side-by-side + title (no subtitle) */}
         <Link href="/" className="flex items-center gap-3 cursor-pointer group flex-shrink-0">
-          <div className="flex items-center gap-2 h-12 flex-shrink-0">
-
-              <Image
-                src="/images/logos/optimized/TNPRS.webp"
-                alt="TNPRS icon"
-                height={48}
-                width={211}
-                className="h-full w-auto object-contain"
-                priority
-              />
+          <div className="relative h-10 sm:h-12 md:h-14 w-24 sm:w-36 md:w-44 flex-shrink-0">
+            <Image
+              src="/images/logos/optimized/TNPRS.webp"
+              alt="TNPRS icon"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
-          {/* title removed from header icons area per design */}
         </Link>
 
         {/* Desktop Navigation */}

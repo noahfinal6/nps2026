@@ -27,13 +27,13 @@ export function PartnersMarquee() {
         <div className="animate-marquee flex items-center gap-12 py-6" style={{ willChange: 'transform' }}>
           {/* First Set */}
           {marqueeImages.map((name, idx) => (
-            <div key={`m1-${idx}`} className="flex items-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all cursor-default shrink-0">
+            <div key={`m1-${idx}`} className="flex items-center transition-all cursor-default shrink-0">
               <Image src={`/images/logos/marquee/${name}`} alt={name.replace(/\.[^.]+$/, '')} width={160} height={48} className="h-12 w-auto object-contain" />
             </div>
           ))}
           {/* Duplicate Set for Seamless Loop */}
           {marqueeImages.map((name, idx) => (
-            <div key={`m2-${idx}`} className="flex items-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all cursor-default shrink-0">
+            <div key={`m2-${idx}`} className="flex items-center transition-all cursor-default shrink-0">
               <Image src={`/images/logos/marquee/${name}`} alt={name.replace(/\.[^.]+$/, '')} width={160} height={48} className="h-12 w-auto object-contain" />
             </div>
           ))}
