@@ -74,7 +74,7 @@ export function Summit2024() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:w-1/2 relative"
+            className="w-full lg:w-1/2 relative"
           >
             <div ref={carouselRef} className="relative h-[500px] overflow-hidden shadow-2xl">
               {/* Main Image */}
@@ -124,7 +124,7 @@ export function Summit2024() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:w-1/2 flex flex-col justify-start"
+            className="w-full lg:w-1/2 flex flex-col justify-start"
           >
             <div style={{ height: carouselHeight ? `${carouselHeight}px` : undefined }} className="overflow-hidden mb-6">
               <div ref={textRef} style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }}>

@@ -41,18 +41,11 @@ export function Header() {
           : "bg-white"
       }`}
     >
-      <div className="container mx-auto px-4 flex items-center justify-between py-4">
+      <div className="container mx-auto px-4 flex flex-wrap items-center justify-between py-4">
         {/* Logo: optimized images side-by-side + title (no subtitle) */}
-        <Link href="/" className="flex items-center gap-3 cursor-pointer group">
-          <div className="flex items-center gap-2 h-12">
-            <Image
-              src="/images/logos/optimized/XEMConsultantsLtdLogo.webp"
-              alt="XEM Consultants Ltd"
-              height={48}
-              width={180}
-              className="h-full w-auto object-contain"
-              priority
-            />
+        <Link href="/" className="flex items-center gap-3 cursor-pointer group flex-shrink-0">
+          <div className="flex items-center gap-2 h-12 flex-shrink-0">
+
               <Image
                 src="/images/logos/optimized/TNPRS.webp"
                 alt="TNPRS icon"
@@ -66,7 +59,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-12 flex-1 justify-end mr-8">
+        <nav className="hidden lg:flex items-center gap-12 flex-1 min-w-0 justify-end mr-8">
           {navLinks.map((link) =>
             link.children ? (
               <div
@@ -114,14 +107,14 @@ export function Header() {
         {/* CTA Button */}
         <Link
           href="/register"
-          className="hidden lg:block bg-emerald-600 text-white px-8 py-3 rounded-lg text-sm font-bold tracking-wide uppercase shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:bg-red-600 transition-all duration-300"
+          className="hidden lg:block bg-emerald-600 text-white px-8 py-3 rounded-lg text-sm font-bold tracking-wide uppercase shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:bg-red-600 transition-all duration-300 lg:ml-4"
         >
           Register Now
         </Link>
 
         {/* Mobile Menu Toggle */}
         <button
-          className="lg:hidden p-2 text-slate-800 hover:text-orange-600 transition-colors"
+          className="lg:hidden p-2 text-slate-800 hover:text-orange-600 transition-colors ml-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu"
         >
