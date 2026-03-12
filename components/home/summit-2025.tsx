@@ -5,9 +5,9 @@ import { motion } from "framer-motion"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 
-import { optimizedImages } from '@/lib/optimizedImages'
+import { optimized2025 } from '@/lib/optimizedImages'
 
-const summitImages = optimizedImages
+const summitImages = optimized2025
 
 export function Summit2025() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)

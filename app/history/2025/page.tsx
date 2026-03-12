@@ -3,7 +3,7 @@ import { Footer } from "@/components/layout/footer"
 import { PageBanner } from "@/components/ui/page-banner"
 import Link from "next/link"
 import { ArrowLeft, CheckCircle2 } from "lucide-react"
-import { optimizedImages } from '@/lib/optimizedImages'
+import { optimized2025 } from '@/lib/optimizedImages'
 import { HistoryGallery } from '@/components/history/gallery'
 
 export const metadata = {
@@ -38,7 +38,7 @@ export default function History2025Page() {
           subtitle="The Retirement Revolution: Embracing the New Era of Possibilities"
         />
 
-        <HistoryGallery images={optimizedImages} />
+        <HistoryGallery images={optimized2025} />
 
         <div className="container mx-auto px-4 py-16 max-w-5xl">
           {/* Back Link */}
