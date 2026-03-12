@@ -123,3 +123,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Slightly reduce root font-size on small screens to make components and text a bit smaller */
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+}

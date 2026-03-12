@@ -41,10 +41,10 @@ export function Header() {
           : "bg-white"
       }`}
     >
-      <div className="container mx-auto px-4 flex flex-wrap items-center justify-between py-4">
+      <div className="container mx-auto px-4 flex flex-wrap items-center justify-between py-2 sm:py-3 lg:py-4">
         {/* Logo: optimized images side-by-side + title (no subtitle) */}
         <Link href="/" className="flex items-center gap-3 cursor-pointer group flex-shrink-0">
-          <div className="relative h-10 sm:h-12 md:h-14 w-24 sm:w-36 md:w-44 flex-shrink-0">
+          <div className="relative h-8 sm:h-10 md:h-14 w-20 sm:w-32 md:w-44 flex-shrink-0">
             <Image
               src="/images/logos/optimized/TNPRS.webp"
               alt="TNPRS icon"
