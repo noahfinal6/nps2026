@@ -53,9 +53,9 @@ export function Summit2024() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-1/2 relative"
+            className="w-full lg:w-1/2 relative flex"
           >
-            <div className="relative h-[500px] overflow-hidden shadow-2xl">
+            <div className="relative flex-1 min-h-[400px] lg:min-h-full overflow-hidden shadow-2xl">
               {/* Main Image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-all duration-500"
