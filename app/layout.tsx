@@ -66,6 +66,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://pulocfsnftbohjbwqbhv.supabase.co" />
+        <link rel="icon" href="/icon-dark-32x32.png" />
       </head>
       <body className={`${montserrat.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} font-sans antialiased`}>
         {children}
