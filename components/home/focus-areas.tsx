@@ -108,14 +108,19 @@ export function FocusAreas() {
             <motion.div
               key={index}
               variants={fadeInUp}
-              className="bg-white p-8 rounded-2xl shadow-lg shadow-black/5 border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+              className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg shadow-black/5 border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
               style={{ willChange: 'opacity, transform' }}
             >
-              <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-emerald-700 transition-all">
-                <area.icon className="w-7 h-7 text-emerald-700 group-hover:text-white transition-colors" />
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-700 transition-all flex-shrink-0">
+                  <area.icon className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-700 group-hover:text-white transition-colors" />
+                </div>
+
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-1">{area.title}</h3>
+                  <p className="text-sm sm:text-base text-slate-600">{area.description}</p>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">{area.title}</h3>
-              <p className="text-slate-600">{area.description}</p>
             </motion.div>
           ))}
         </motion.div>
