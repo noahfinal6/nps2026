@@ -63,6 +63,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://pulocfsnftbohjbwqbhv.supabase.co" />
+      </head>
       <body className={`${montserrat.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} font-sans antialiased`}>
         {children}
         <Analytics />

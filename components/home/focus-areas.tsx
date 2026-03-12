@@ -82,7 +82,8 @@ export function FocusAreas() {
           >
             <div className="flex-1">
               <p className="font-mono text-xs font-bold uppercase tracking-widest text-[#016633] mb-4">2026 Theme</p>
-              <h3 className="text-3xl md:text-4xl font-black text-[#02004C] tracking-tighter leading-tight mb-4">Driving Implementation: From Policy to Practice</h3>
+              <h3 className="text-3xl md:text-4xl font-black text-[#02004C] tracking-tighter leading-tight mb-4">Own Your
+                <br />Retirement: From Planning To Action</h3>
               <p className="text-[#787878] text-lg font-medium leading-relaxed">The 2026 program focuses on measurable outcomes across policy reform, investment pathways, and scalable retirement solutions — with dedicated working groups for finance, health, and digital inclusion.</p>
             </div>
             <div className="lg:w-64 shrink-0">
