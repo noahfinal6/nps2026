@@ -46,8 +46,16 @@ export function HistoryGallery({ images }: GalleryProps) {
 
       {isOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center" onClick={closeModal}>
-          <div className="relative max-w-[90vw] max-h-[90vh]">
+          <div className="relative max-w-[90vw] max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+            <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 z-60 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors border border-white/20">
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </button>
+
             <img src={images[idx]} alt="gallery" className="max-w-full max-h-full object-contain" />
+
+            <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 z-60 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors border border-white/20">
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
           </div>
         </div>
       )}

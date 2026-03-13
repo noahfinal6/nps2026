@@ -11,12 +11,20 @@ export function HeroSection() {
 	const slideshowImages = optimizedImages
 
 	const [currentIndex, setCurrentIndex] = useState(0)
+	const [isMobile, setIsMobile] = useState(false)
 
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setCurrentIndex((p) => (p + 1) % slideshowImages.length)
 		}, 6000)
 		return () => clearInterval(interval)
+	}, [])
+
+	useEffect(() => {
+		const onResize = () => setIsMobile(typeof window !== 'undefined' && window.innerWidth < 1024)
+		onResize()
+		window.addEventListener('resize', onResize)
+		return () => window.removeEventListener('resize', onResize)
 	}, [])
 
 	return (
@@ -34,8 +42,13 @@ export function HeroSection() {
 				))}
 			</div>
 
-			{/* Gradient overlay (slightly reduced opacity) */}
-			<div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(135deg, rgba(1,102,51,0.82) 0%, rgba(204,51,0,0.86) 100%)' }} />
+			{/* Gradient overlay (slightly reduced opacity; lighter on small screens so background photos are visible) */}
+			<div
+				className="absolute inset-0 z-10"
+				style={{
+					background: `linear-gradient(135deg, rgba(1,102,51,${isMobile ? 0.45 : 0.82}) 0%, rgba(204,51,0,${isMobile ? 0.45 : 0.86}) 100%)`,
+				}}
+			/>
 			{/* Bottom Fade */}
 			<div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20" />
 
