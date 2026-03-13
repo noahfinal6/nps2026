@@ -5,6 +5,9 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PageBanner } from "@/components/ui/page-banner"
 import { motion } from "framer-motion"
+import { Progress } from '@/components/ui/progress'
+import generateTicketImage from '@/lib/generateTicket'
+import RegistrationIndicator from '@/components/ui/registration-indicator'
 import { CheckCircle2, ArrowRight, User, Building2, Phone, Mail, Clock, Briefcase, Lightbulb, Shield } from "lucide-react"
 
 const titleOptions = ["Mr.", "Mrs.", "Ms.", "Dr.", "Prof.", "Engr.", "Chief", "Alhaji", "Hajiya"]
@@ -42,27 +45,36 @@ export default function RegisterPage() {
     phoneNumber: "",
     email: "",
     yearsToRetirement: "",
-    retirementPolicies: "",
     investmentAdvisory: "",
     digitalSkillset: ""
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
+  // Multi-step state (all inline in the same frame)
+  const [step, setStep] = useState(1)
+  const totalSteps = 4
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null)
+  const [paymentOption, setPaymentOption] = useState<'online'|'later'|null>(null)
+  const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
+  const [ticketUrl, setTicketUrl] = useState<string | null>(null)
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // Submits registration record to server (used after payment or on-site)
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
     setIsSubmitting(true)
 
     try {
+      const payload = { ...formData, package: selectedPackage, paymentOption }
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       })
 
       const result = await res.json()
@@ -73,7 +85,7 @@ export default function RegisterPage() {
         return
       }
 
-      // After successful registration, trigger welcome email via server route.
+      // best-effort welcome email
       try {
         await fetch('/api/send-welcome', {
           method: 'POST',
@@ -81,7 +93,6 @@ export default function RegisterPage() {
           body: JSON.stringify({ name: formData.fullName, email: formData.email })
         })
       } catch (emailErr) {
-        // Log but don't block the flow for the user
         console.error('Failed to send welcome email', emailErr)
       }
 
@@ -90,6 +101,41 @@ export default function RegisterPage() {
     } catch (err) {
       setIsSubmitting(false)
       alert('Submission failed. Please try again.')
+    }
+  }
+
+  const packages = [
+    { id: 'sponsored', label: 'Sponsored Participants — ₦249,900' },
+    { id: 'military', label: 'Military & Paramilitary Participants — ₦239,900' },
+    { id: 'disabled', label: 'Disabled Participants — ₦229,900' },
+    { id: 'retired', label: 'Retired Participants — ₦229,900' },
+  ]
+
+  const handleGenerateTicket = async (orderId?: string) => {
+    const url = await generateTicketImage({ fullName: formData.fullName || 'Guest', packageLabel: packages.find(p=>p.id===selectedPackage)?.label||'Participant', summitName: 'NPS 2026', orderId })
+    setTicketUrl(url)
+  }
+
+  const handleFinalise = async () => {
+    if (!selectedPackage) return alert('Please select a package')
+    if (!paymentOption) return alert('Please select a payment option')
+
+    setIsSubmitting(true)
+    try {
+      if (paymentOption === 'online') {
+        const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ form: { ...formData, package: selectedPackage } }) })
+        const json = await res.json()
+        if (!res.ok) throw new Error(json?.error || 'Payment failed')
+        await handleGenerateTicket(json.orderId)
+        await handleSubmit()
+      } else {
+        await handleGenerateTicket('ON-SITE-' + Date.now())
+        await handleSubmit()
+      }
+    } catch (err: any) {
+      alert(err?.message || 'An error occurred')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -138,6 +184,7 @@ export default function RegisterPage() {
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
+              <RegistrationIndicator />
               {/* Form Introduction */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -151,280 +198,189 @@ export default function RegisterPage() {
                 </p>
               </motion.div>
 
-              {/* Registration Form */}
+              {/* Registration Form (multi-step inline) */}
               <motion.form
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                onSubmit={handleSubmit}
+                onSubmit={(e) => e.preventDefault()}
                 className="bg-white rounded-2xl shadow-lg shadow-black/5 p-8"
               >
-                {/* Personal Information */}
-                <div className="mb-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                      <User className="w-5 h-5 text-emerald-700" />
+                <div className="mb-6">
+                  <Progress value={Math.round((step / totalSteps) * 100)} />
+                </div>
+
+                {/* Step 1: Package selection */}
+                {step === 1 && (
+                  <div className="mb-8">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Select a package</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {packages.map(p => (
+                        <button key={p.id} type="button" onClick={() => setSelectedPackage(p.id)} className={`p-4 text-left rounded-xl border ${selectedPackage === p.id ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200 bg-white'}`}>
+                          <div className="font-semibold">{p.label}</div>
+                        </button>
+                      ))}
                     </div>
-                    <h3 className="text-lg font-bold text-slate-900">Personal Information</h3>
                   </div>
+                )}
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Title *
-                      </label>
-                      <select
-                        id="title"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        required
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                      >
-                        <option value="">Select title</option>
-                        {titleOptions.map(title => (
-                          <option key={title} value={title}>{title}</option>
-                        ))}
-                      </select>
+                {/* Step 2: Payment option */}
+                {step === 2 && (
+                  <div className="mb-8">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Payment option</h3>
+                    <div className="flex gap-3">
+                      <button type="button" onClick={() => setPaymentOption('online')} className={`px-4 py-3 rounded-xl border ${paymentOption === 'online' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200 bg-white'}`}>Pay Now (Online)</button>
+                      <button type="button" onClick={() => setPaymentOption('later')} className={`px-4 py-3 rounded-xl border ${paymentOption === 'later' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200 bg-white'}`}>Pay Later (On-site)</button>
                     </div>
+                  </div>
+                )}
 
-                    <div className="md:col-span-2">
-                      <label htmlFor="fullName" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Full Name (as it should appear on certificate) *
-                      </label>
-                      <input
-                        type="text"
-                        id="fullName"
-                        name="fullName"
-                        value={formData.fullName}
-                        onChange={handleChange}
-                        required
-                        placeholder="Enter your full name"
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                      />
-                    </div>
+                {/* Step 3: Details (personal, work, retirement, additional) */}
+                {step === 3 && (
+                  <>
+                    <div className="mb-10">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                          <User className="w-5 h-5 text-emerald-700" />
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900">Personal Information</h3>
+                      </div>
 
-                    <div>
-                      <label htmlFor="phoneNumber" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Phone Number *
-                      </label>
-                      <div className="relative">
-                        <Phone className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="tel"
-                          id="phoneNumber"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleChange}
-                          required
-                          placeholder="+234 XXX XXX XXXX"
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-slate-800 placeholder:text-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                        />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">Title *</label>
+                          <select id="title" name="title" value={formData.title} onChange={handleChange} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800">
+                            <option value="">Select title</option>
+                            {titleOptions.map(title => (<option key={title} value={title}>{title}</option>))}
+                          </select>
+                        </div>
+
+                        <div className="md:col-span-2">
+                          <label htmlFor="fullName" className="block text-sm font-semibold text-slate-700 mb-2">Full Name (as it should appear on certificate) *</label>
+                          <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} required placeholder="Enter your full name" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3" />
+                        </div>
+
+                        <div>
+                          <label htmlFor="phoneNumber" className="block text-sm font-semibold text-slate-700 mb-2">Phone Number *</label>
+                          <div className="relative">
+                            <Phone className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                            <input type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required placeholder="+234 XXX XXX XXXX" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3" />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">Email Address *</label>
+                          <div className="relative">
+                            <Mail className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                            <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required placeholder="your.email@example.com" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3" />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Email Address *
-                      </label>
-                      <div className="relative">
-                        <Mail className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          placeholder="your.email@example.com"
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-slate-800 placeholder:text-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                        />
+                    <div className="mb-10">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <Building2 className="w-5 h-5 text-orange-600" />
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900">Work Information</h3>
                       </div>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Work Information */}
-                <div className="mb-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                      <Building2 className="w-5 h-5 text-orange-600" />
-                    </div>
-                    <h3 className="text-lg font-bold text-slate-900">Work Information</h3>
-                  </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="md:col-span-2">
+                          <label htmlFor="placeOfWork" className="block text-sm font-semibold text-slate-700 mb-2">Place of Work *</label>
+                          <input type="text" id="placeOfWork" name="placeOfWork" value={formData.placeOfWork} onChange={handleChange} required placeholder="Enter your organization/company name" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3" />
+                        </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="md:col-span-2">
-                      <label htmlFor="placeOfWork" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Place of Work *
-                      </label>
-                      <input
-                        type="text"
-                        id="placeOfWork"
-                        name="placeOfWork"
-                        value={formData.placeOfWork}
-                        onChange={handleChange}
-                        required
-                        placeholder="Enter your organization/company name"
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                      />
-                    </div>
+                        <div>
+                          <label htmlFor="department" className="block text-sm font-semibold text-slate-700 mb-2">Department *</label>
+                          <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} required placeholder="Enter your department" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3" />
+                        </div>
 
-                    <div>
-                      <label htmlFor="department" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Department *
-                      </label>
-                      <input
-                        type="text"
-                        id="department"
-                        name="department"
-                        value={formData.department}
-                        onChange={handleChange}
-                        required
-                        placeholder="Enter your department"
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="designation" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Designation/Job Title *
-                      </label>
-                      <div className="relative">
-                        <Briefcase className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="text"
-                          id="designation"
-                          name="designation"
-                          value={formData.designation}
-                          onChange={handleChange}
-                          required
-                          placeholder="Enter your job title"
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-slate-800 placeholder:text-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Retirement Information */}
-                <div className="mb-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                      <Clock className="w-5 h-5 text-slate-700" />
-                    </div>
-                    <h3 className="text-lg font-bold text-slate-900">Retirement Information</h3>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="yearsToRetirement" className="block text-sm font-semibold text-slate-700 mb-2">
-                        How many years to retirement? *
-                      </label>
-                      <select
-                        id="yearsToRetirement"
-                        name="yearsToRetirement"
-                        value={formData.yearsToRetirement}
-                        onChange={handleChange}
-                        required
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                      >
-                        <option value="">Select an option</option>
-                        {yearsToRetirementOptions.map(option => (
-                          <option key={option} value={option}>{option}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <label htmlFor="retirementPolicies" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Do you have any retirement policies? (Optional)
-                      </label>
-                      <textarea
-                        id="retirementPolicies"
-                        name="retirementPolicies"
-                        value={formData.retirementPolicies}
-                        onChange={handleChange}
-                        rows={3}
-                        placeholder="Describe any existing retirement policies, pension plans, or savings arrangements you have..."
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all resize-none"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Additional Information */}
-                <div className="mb-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                      <Lightbulb className="w-5 h-5 text-emerald-700" />
-                    </div>
-                    <h3 className="text-lg font-bold text-slate-900">Additional Information</h3>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="investmentAdvisory" className="block text-sm font-semibold text-slate-700 mb-2">
-                        Are you interested in investment advisory? *
-                      </label>
-                      <div className="flex gap-4">
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="investmentAdvisory"
-                            value="yes"
-                            checked={formData.investmentAdvisory === "yes"}
-                            onChange={handleChange}
-                            required
-                            className="w-5 h-5 text-emerald-600 focus:ring-emerald-500"
-                          />
-                          <span className="text-slate-700">Yes</span>
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="investmentAdvisory"
-                            value="no"
-                            checked={formData.investmentAdvisory === "no"}
-                            onChange={handleChange}
-                            className="w-5 h-5 text-emerald-600 focus:ring-emerald-500"
-                          />
-                          <span className="text-slate-700">No</span>
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="investmentAdvisory"
-                            value="maybe"
-                            checked={formData.investmentAdvisory === "maybe"}
-                            onChange={handleChange}
-                            className="w-5 h-5 text-emerald-600 focus:ring-emerald-500"
-                          />
-                          <span className="text-slate-700">Maybe</span>
-                        </label>
+                        <div>
+                          <label htmlFor="designation" className="block text-sm font-semibold text-slate-700 mb-2">Designation/Job Title *</label>
+                          <div className="relative">
+                            <Briefcase className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                            <input type="text" id="designation" name="designation" value={formData.designation} onChange={handleChange} required placeholder="Enter your job title" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3" />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <div>
-                      <label htmlFor="digitalSkillset" className="block text-sm font-semibold text-slate-700 mb-2">
-                        What digital skills do you have? *
-                      </label>
-                      <select
-                        id="digitalSkillset"
-                        name="digitalSkillset"
-                        value={formData.digitalSkillset}
-                        onChange={handleChange}
-                        required
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                      >
-                        <option value="">Select your skill level</option>
-                        {digitalSkillsetOptions.map(option => (
-                          <option key={option} value={option}>{option}</option>
-                        ))}
-                      </select>
+                    <div className="mb-10">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                          <Clock className="w-5 h-5 text-slate-700" />
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900">Retirement Information</h3>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label htmlFor="yearsToRetirement" className="block text-sm font-semibold text-slate-700 mb-2">How many years to retirement? *</label>
+                          <select id="yearsToRetirement" name="yearsToRetirement" value={formData.yearsToRetirement} onChange={handleChange} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+                            <option value="">Select an option</option>
+                            {yearsToRetirementOptions.map(option => (<option key={option} value={option}>{option}</option>))}
+                          </select>
+                        </div>
+                      </div>
                     </div>
+
+                    <div className="mb-10">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                          <Lightbulb className="w-5 h-5 text-emerald-700" />
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900">Additional Information</h3>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label htmlFor="investmentAdvisory" className="block text-sm font-semibold text-slate-700 mb-2">Are you interested in investment advisory? *</label>
+                          <div className="flex gap-4">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="radio" name="investmentAdvisory" value="yes" checked={formData.investmentAdvisory === "yes"} onChange={handleChange} required className="w-5 h-5 text-emerald-600" />
+                              <span className="text-slate-700">Yes</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="radio" name="investmentAdvisory" value="no" checked={formData.investmentAdvisory === "no"} onChange={handleChange} className="w-5 h-5 text-emerald-600" />
+                              <span className="text-slate-700">No</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="radio" name="investmentAdvisory" value="maybe" checked={formData.investmentAdvisory === "maybe"} onChange={handleChange} className="w-5 h-5 text-emerald-600" />
+                              <span className="text-slate-700">Maybe</span>
+                            </label>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label htmlFor="digitalSkillset" className="block text-sm font-semibold text-slate-700 mb-2">What digital skills do you have? *</label>
+                          <select id="digitalSkillset" name="digitalSkillset" value={formData.digitalSkillset} onChange={handleChange} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+                            <option value="">Select your skill level</option>
+                            {digitalSkillsetOptions.map(option => (<option key={option} value={option}>{option}</option>))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Step 4: Photo & finalize */}
+                {step === 4 && (
+                  <div className="mb-8">
+                    <h3 className="text-lg font-bold text-slate-900 mb-3">Profile photo</h3>
+                    <p className="text-sm text-slate-600 mb-3">Take a photo with your camera or upload an image.</p>
+                    <input accept="image/*" capture="environment" type="file" onChange={(e)=>{ const f = e.target.files?.[0]; if(!f) return; const r = new FileReader(); r.onload = ()=> setPhotoDataUrl(String(r.result)); r.readAsDataURL(f); }} />
+                    {photoDataUrl && <img src={photoDataUrl} className="mt-3 w-40 h-40 object-cover rounded-md" />}
+                    {ticketUrl && (
+                      <div className="mt-4">
+                        <h5 className="font-semibold mb-2">Your ticket</h5>
+                        <img src={ticketUrl} alt="ticket" className="w-full rounded-md border" />
+                        <a className="inline-block mt-3 px-4 py-2 bg-emerald-600 text-white rounded-lg" href={ticketUrl} download={`NPS2026-ticket-${formData.fullName||'guest'}.png`}>Download Ticket</a>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
 
                 {/* Privacy Notice */}
                 <div className="mb-8 p-4 bg-gray-50 rounded-xl flex items-start gap-3">
@@ -434,27 +390,12 @@ export default function RegisterPage() {
                   </p>
                 </div>
 
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-orange-600/20 disabled:opacity-70 disabled:cursor-not-allowed group"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Processing Registration...
-                    </>
-                  ) : (
-                    <>
-                      Complete Registration
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </button>
+                {/* Navigation Buttons */}
+                <div className="flex gap-3">
+                  {step > 1 && <button type="button" onClick={()=>setStep(s=>s-1)} className="px-4 py-3 rounded-md border">Back</button>}
+                  {step < totalSteps && <button type="button" onClick={() => { if(step===1){ if(!selectedPackage) return alert('Please select a package'); setStep(2); return } if(step===2){ if(!paymentOption) return alert('Please choose a payment option'); setStep(3); return } if(step===3){ setStep(4); return } }} className="ml-auto px-4 py-3 rounded-md bg-emerald-600 text-white">Continue</button>}
+                  {step === totalSteps && <button type="button" onClick={handleFinalise} disabled={isSubmitting} className="ml-auto px-4 py-3 rounded-md bg-emerald-600 text-white">{isSubmitting ? 'Processing...' : (paymentOption==='online' ? 'Pay & Generate Ticket' : 'Generate Ticket')}</button>}
+                </div>
               </motion.form>
             </div>
           </div>

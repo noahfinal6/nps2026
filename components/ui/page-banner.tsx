@@ -13,11 +13,24 @@ interface PageBannerProps {
 
 export function PageBanner({ title, subtitle }: PageBannerProps) {
   const [bg, setBg] = useState<string>(optimizedImages[0])
+  const [rotIndex, setRotIndex] = useState(0)
+  const rotatingPhrases = [
+    'retirement resources hub',
+    'retirement planning platform',
+    'post career production hub',
+  ]
 
   useEffect(() => {
     // pick a random optimized image for every mount
     const i = Math.floor(Math.random() * optimizedImages.length)
     setBg(optimizedImages[i])
+  }, [])
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setRotIndex((p) => (p + 1) % rotatingPhrases.length)
+    }, 2600)
+    return () => clearInterval(t)
   }, [])
 
   return (
@@ -38,15 +51,22 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
 
       <div className="container relative z-10 mx-auto px-4 flex flex-col items-center text-center">
-        {/* Badge */}
+        {/* Logo (replaces pill badge) */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="inline-block mb-4 px-4 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-white font-mono text-sm uppercase tracking-wider"
-          style={{ willChange: 'opacity, transform' }}
+          transition={{ duration: 0.45 }}
+          className="mb-4"
         >
-          NPS 2026
+          <div className="w-40 h-20 relative mx-auto">
+            <Image
+              src="/images/logos/optimized/npslogo.webp"
+              alt="NPS 2026"
+              fill
+              sizes="160px"
+              className="object-contain"
+            />
+          </div>
         </motion.div>
 
         {/* Title */}
@@ -60,16 +80,28 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
           {title}
         </motion.h1>
 
-        {/* Subtitle */}
+        {/* Subtitle with rotating phrase after 'premier' */}
         {subtitle && (
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-lg md:text-xl text-white/80 max-w-2xl"
+            className="text-lg md:text-xl text-white/80 max-w-2xl flex items-center gap-2 justify-center"
             style={{ willChange: 'opacity, transform' }}
           >
-            {subtitle}
+            <span>Secure your place at Nigeria's premier</span>
+            <span className="relative inline-block w-[18rem] md:w-[26rem] text-left">
+              <motion.span
+                key={rotIndex}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.6 }}
+                className="inline-block font-semibold"
+              >
+                {rotatingPhrases[rotIndex]}
+              </motion.span>
+            </span>
           </motion.p>
         )}
       </div>
