@@ -76,7 +76,7 @@ export default function PartnersPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow pt-[88px]">
+      <main className="flex-grow pt-12 lg:pt-[88px]">
         <PageBanner
           title="Partners & Sponsors"
           subtitle="Join Africa's premier retirement readiness platform as a strategic partner."

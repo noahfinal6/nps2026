@@ -40,7 +40,7 @@ export default function SpeakersPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow pt-[88px]">
+      <main className="flex-grow pt-12 lg:pt-[88px]">
         <PageBanner
           title="Guest Speakers"
           subtitle="Meet the policymakers, industry leaders, and experts shaping Africa's retirement landscape."

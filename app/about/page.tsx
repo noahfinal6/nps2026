@@ -11,7 +11,7 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow pt-[88px]">
+      <main className="flex-grow pt-12 lg:pt-[88px]">
         <PageBanner
           title="About NPS"
           subtitle="The premier Nigerian and Pan-African platform advancing retirement readiness."

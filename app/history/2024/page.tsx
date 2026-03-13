@@ -34,7 +34,7 @@ export default function History2024Page() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow pt-[88px]">
+      <main className="flex-grow pt-12 lg:pt-[88px]">
         <PageBanner
           title="2024 Summit"
           subtitle="Establishing a National Platform for Retirement Readiness"

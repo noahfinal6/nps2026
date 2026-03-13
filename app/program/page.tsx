@@ -90,7 +90,7 @@ export default function Program2026Page() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow pt-[88px]">
+      <main className="flex-grow pt-12 lg:pt-[88px]">
         <PageBanner
           title="2026 Summit"
           subtitle="Own Your Retirement: From Planning to Action"

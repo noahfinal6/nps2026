@@ -97,7 +97,7 @@ export default function RegisterPage() {
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow pt-[88px]">
+        <main className="flex-grow pt-12 lg:pt-[88px]">
           <div className="min-h-[70vh] flex items-center justify-center bg-gray-50">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -129,7 +129,7 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow pt-[88px]">
+      <main className="flex-grow pt-12 lg:pt-[88px]">
         <PageBanner
           title="Register for NPS 2026"
           subtitle="Secure your place at Nigeria's premier pre-retirement summit"
