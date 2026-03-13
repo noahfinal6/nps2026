@@ -130,3 +130,24 @@
     font-size: 14px;
   }
 }
+
+/* Marquee animation used in the hero section */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.marquee {
+  background: #FFD200;
+  overflow: hidden;
+}
+.marquee__inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4rem;
+  padding: 0.5rem 0;
+  color: #ffffff;
+  animation: marquee 18s linear infinite;
+}
+.marquee__inner > * {
+  flex: 0 0 auto;
+}

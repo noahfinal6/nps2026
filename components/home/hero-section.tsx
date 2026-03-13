@@ -28,9 +28,7 @@ export function HeroSection() {
 	}, [])
 
 	return (
-		<section
-			className="relative min-h-[90vh] flex items-center overflow-hidden">
-
+		<section className="relative min-h-screen flex flex-col overflow-hidden">
 			{/* Slideshow image layers (cross-fade) */}
 			<div className="absolute inset-0 z-0">
 				{slideshowImages.map((src, idx) => (
@@ -42,7 +40,7 @@ export function HeroSection() {
 				))}
 			</div>
 
-			{/* Gradient overlay (slightly reduced opacity; lighter on small screens so background photos are visible) */}
+			{/* Gradient overlay */}
 			<div
 				className="absolute inset-0 z-10"
 				style={{
@@ -52,121 +50,117 @@ export function HeroSection() {
 			{/* Bottom Fade */}
 			<div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20" />
 
-			{/* Content */}
-			<div className="container mx-auto px-4 relative z-30 py-20">
-				<div className="flex flex-col lg:flex-row items-start lg:items-center gap-12">
-					<div className="max-w-4xl flex-1">
-						{/* Date/Location Badge */}
-						<motion.div
-							initial={{ opacity: 0, x: -20 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ duration: 0.4 }}
-							className="inline-flex items-center gap-4 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white font-mono text-sm mb-8 backdrop-blur-sm"
-							style={{ willChange: 'opacity, transform' }}
-						>
-							<span className="flex items-center gap-2">
-								<Calendar className="w-4 h-4" />
-								15-16 July 2026
-							</span>
-							<span className="w-1 h-1 rounded-full bg-white/50" />
-							<span className="flex items-center gap-2">
-								<MapPin className="w-4 h-4" />
-								Abuja, Nigeria
-							</span>
-						</motion.div>
+			{/* All Content Inside Hero Section */}
+			<div className="relative z-30 flex-1 flex flex-col justify-center">
+				{/* Main Content - Flex to push buttons down */}
+				<div className="container mx-auto px-4 py-4 md:py-6 w-full">
+					<div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12 w-full">
+						<div className="max-w-4xl flex-1 w-full">
+							{/* Date/Location Badge */}
+							<motion.div
+								initial={{ opacity: 0, x: -20 }}
+								animate={{ opacity: 1, x: 0 }}
+								transition={{ duration: 0.4 }}
+								className="inline-flex items-center gap-2 md:gap-4 px-3 md:px-4 py-2 rounded-none bg-red-700 text-white font-mono text-xs md:text-sm mb-2 md:mb-3 font-bold"
+								style={{ willChange: 'opacity, transform' }}
+							>
+								<span className="flex items-center gap-2">
+									<Calendar className="w-3 h-3 md:w-4 md:h-4" />
+									<span className="hidden sm:inline">15-16 July 2026</span>
+									<span className="sm:hidden">Jul 15-16</span>
+								</span>
+								<span className="w-1 h-1 rounded-full bg-white/50" />
+								<span className="flex items-center gap-2">
+									<MapPin className="w-3 h-3 md:w-4 md:h-4" />
+									<span className="hidden sm:inline">Abuja, Nigeria</span>
+									<span className="sm:hidden">Abuja</span>
+								</span>
+							</motion.div>
 
-						{/* Main Heading */}
+							{/* Main Heading */}
 							<motion.div
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.05 }}
 								style={{ willChange: 'opacity, transform' }}
-								className="group"
+								className="group mb-0"
 							>
-								<h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter mb-6">
-									<span className="text-white">Own Your</span> <br />
-									<span className="text-amber-300 transition-all duration-300 group-hover:drop-shadow-[0_0_20px_rgba(250,204,21,0.9)] group-hover:scale-[1.02] inline-block">
-										Retirement.
+								<div className="mb-2 md:mb-3 text-xs md:text-lg uppercase tracking-tight text-white font-mono font-bold">2026 theme:</div>
+								<h1 className="font-black group leading-none">
+									<span className="text-white block text-2xl md:text-5xl lg:text-7xl tracking-tight">Own Your</span>
+									<span className="text-amber-300 block text-4xl md:text-7xl lg:text-9xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
+										Retirement
+									</span>
+									<span className="text-white block text-xl md:text-4xl lg:text-6xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight mt-1">
+										From Planning to Action
 									</span>
 								</h1>
 							</motion.div>
+						</div>
 
-						{/* Subtitle */}
-						<motion.p
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.5, delay: 0.1 }}
-							className="text-xl md:text-2xl text-gray-200 font-medium max-w-2xl mb-10 leading-relaxed font-mono"
-							style={{ willChange: 'opacity, transform' }}
-						>
-							From Planning to Action. Join Africa&apos;s premier platform for retirement readiness, financial security, and post-career productivity.
-						</motion.p>
-
-						{/* CTA Buttons */}
+						{/* Right Side: NPS 2026 Logo and Year - Hidden on Mobile */}
 						<motion.div
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.5, delay: 0.15 }}
-							className="flex flex-col sm:flex-row gap-4"
-							style={{ willChange: 'opacity, transform' }}
+							initial={{ opacity: 0, x: 30 }}
+							animate={{ opacity: 1, x: 0 }}
+							transition={{ duration: 0.6, delay: 0.3 }}
+							className="hidden lg:flex flex-col items-center gap-3 justify-center flex-1"
 						>
-							<Link
-								href="/register"
-								className="bg-gradient-to-r from-emerald-500 to-orange-400 hover:from-emerald-600 hover:to-orange-500 text-white px-8 py-4 rounded-xl font-bold text-lg text-center shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
-							>
-								Register Now
-								<ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-							</Link>
-							<Link
-								href="/program"
-								className="bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/30 px-8 py-4 rounded-xl font-bold text-lg text-center transition-all hover:-translate-y-1"
-							>
-								View Program
-							</Link>
-						</motion.div>
-					</div>
-
-					{/* Right Side: NPS 2026 Logo and Year */}
-					<motion.div
-						initial={{ opacity: 0, x: 30 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.6, delay: 0.3 }}
-						className="hidden lg:flex flex-col items-center gap-4 h-full justify-center w-full"
-						>
-							<div className="flex flex-col lg:flex-row items-center lg:items-stretch gap-6 h-full w-full justify-center">
-								{/* left: heading + main logo stacked */}
-								<div className="flex flex-col items-center gap-4 h-full">
-									<h2 className="relative z-20 text-6xl md:text-8xl lg:text-9xl font-black text-amber-300 leading-none">2026</h2>
-									<div className="max-w-[44rem] w-full max-h-[64vh] flex flex-col items-center mt-0 relative z-10 overflow-visible">
-										<Image
-											src="/images/logos/optimized/NPSlogoWhite.webp"
-											alt="NPS 2026 logo"
-											width={704}
-											height={704}
-											className="object-contain max-h-full w-auto"
-											priority
-										/>
-										{/* TRHL below main logo */}
-										<div className="mt-4">
-											<Image
-												src="/images/logos/optimized/TRHL.png"
-												alt="TRHL"
-												width={240}
-												height={72}
-												className="object-contain"
-												priority
-											/>
-										</div>
-									</div>
-								</div>
-
-								{/* TRHL moved to header icons per user request */}
+							<h2 className="relative z-20 text-5xl md:text-6xl lg:text-7xl font-black text-amber-300 leading-none">2026</h2>
+							<div className="max-w-[60rem] w-full max-h-[40vh] flex flex-col items-center relative z-10 overflow-visible">
+								<Image
+									src="/images/logos/optimized/NPSlogoWhite.webp"
+									alt="NPS 2026 logo"
+									width={900}
+									height={900}
+									className="object-contain max-h-full w-auto"
+									priority
+								/>
 							</div>
 						</motion.div>
+					</div>
+				</div>
+
+				{/* Marquee - Inside Hero Section, After Text, No Extra Padding */}
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5, delay: 0.2 }}
+					className="w-screen relative left-1/2 -translate-x-1/2 bg-yellow-400 py-2 md:py-3 overflow-hidden"
+					style={{ willChange: 'opacity' }}
+				>
+					<div className="marquee__inner animate-marquee text-gray-900 text-sm md:text-lg font-semibold flex whitespace-nowrap">
+						<span className="pr-8 md:pr-12">Join Africa's premier platform for retirement readiness, financial security, and post-career productivity — Register today to secure your spot.</span>
+						<span className="pr-8 md:pr-12">Join Africa's premier platform for retirement readiness, financial security, and post-career productivity — Register today to secure your spot.</span>
+					</div>
+				</motion.div>
+
+				{/* Buttons - Inside Hero Section, Below Marquee */}
+				<div className="container mx-auto px-4 py-2 md:py-3 relative z-30">
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.5, delay: 0.25 }}
+						className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-start"
+						style={{ willChange: 'opacity, transform' }}
+					>
+						<Link
+							href="/register"
+							className="bg-gradient-to-r from-emerald-500 to-orange-400 hover:from-emerald-600 hover:to-orange-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-base md:text-lg text-center shadow-lg transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 w-full sm:w-auto"
+						>
+							Register Now
+							<ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+						</Link>
+						<Link
+							href="/program"
+							className="bg-white hover:bg-gray-100 text-gray-900 border-2 border-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-base md:text-lg text-center transition-all hover:-translate-y-1 w-full sm:w-auto"
+						>
+							View Program
+						</Link>
+					</motion.div>
 				</div>
 			</div>
 
-			{/* Slide indicator (bottom center) */}
+			{/* Slide indicator (pinned to hero bottom) */}
 			<div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">
 				<div className="flex gap-2 justify-center">
 					{slideshowImages.map((_, idx) => (
