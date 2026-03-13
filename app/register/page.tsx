@@ -108,14 +108,15 @@ export default function RegisterPage() {
   }
 
   const packages = [
-    { id: 'sponsored', label: 'Sponsored Participants — ₦249,900' },
-    { id: 'military', label: 'Military & Paramilitary Participants — ₦239,900' },
-    { id: 'disabled', label: 'Disabled Participants — ₦229,900' },
-    { id: 'retired', label: 'Retired Participants — ₦229,900' },
+    { id: 'sponsored', name: 'Sponsored', price: '₦249,900' },
+    { id: 'military', name: 'Military & Paramilitary', price: '₦239,900' },
+    { id: 'disabled', name: 'Disabled', price: '₦229,900' },
+    { id: 'retired', name: 'Retired', price: '₦229,900' },
   ]
 
   const handleGenerateTicket = async (orderId?: string) => {
-    const url = await generateTicketImage({ fullName: formData.fullName || 'Guest', packageLabel: packages.find(p=>p.id===selectedPackage)?.label||'Participant', summitName: 'NPS 2026', orderId })
+    const pkg = packages.find(p => p.id === selectedPackage)
+    const url = await generateTicketImage({ fullName: formData.fullName || 'Guest', packageLabel: pkg?.name || 'Participant', summitName: 'NPS 2026', orderId })
     setTicketUrl(url)
   }
 
@@ -265,11 +266,12 @@ export default function RegisterPage() {
                 {/* Step 1: Package selection */}
                 {step === 1 && (
                   <div className="mb-8">
-                    <h3 className="text-lg font-bold text-slate-900 mb-4">Select a package</h3>
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Select a participant package</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {packages.map(p => (
-                        <button key={p.id} type="button" onClick={() => setSelectedPackage(p.id)} className={`p-4 text-left rounded-xl border ${selectedPackage === p.id ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200 bg-white'}`}>
-                          <div className="font-semibold">{p.label}</div>
+                        <button key={p.id} type="button" onClick={() => setSelectedPackage(p.id)} className={`p-4 text-left rounded-xl border flex items-center justify-between gap-3 ${selectedPackage === p.id ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200 bg-white'}`}>
+                          <div className="font-semibold text-slate-900">{p.name}</div>
+                          <div className="ml-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-bold">{p.price}</div>
                         </button>
                       ))}
                     </div>

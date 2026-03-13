@@ -15,10 +15,11 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
   const [bg, setBg] = useState<string>(optimizedImages[0])
   const [rotIndex, setRotIndex] = useState(0)
   const rotatingPhrases = [
-    'retirement resources hub',
-    'retirement planning platform',
-    'post career production hub',
+    'Retirement resources hub',
+    'Retirement planning platform',
+    'Post career production hub',
   ]
+  const reserveText = rotatingPhrases.reduce((a, b) => (a.length > b.length ? a : b), '')
 
   useEffect(() => {
     // pick a random optimized image for every mount
@@ -58,12 +59,12 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
           transition={{ duration: 0.45 }}
           className="mb-4"
         >
-          <div className="w-56 h-28 md:w-72 md:h-36 relative mx-auto">
+          <div className="w-64 h-36 md:w-96 md:h-48 lg:w-[520px] lg:h-[200px] relative mx-auto">
             <Image
               src="/images/logos/optimized/npslogo.webp"
               alt="NPS 2026"
               fill
-              sizes="(min-width: 768px) 288px, 224px"
+              sizes="(min-width: 1024px) 520px, (min-width: 768px) 384px, 256px"
               className="object-contain"
             />
           </div>
@@ -86,11 +87,13 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-lg md:text-xl text-white/80 max-w-2xl flex items-center gap-2 justify-center whitespace-nowrap overflow-hidden"
+            className="text-lg md:text-xl text-white/80 max-w-2xl flex items-center gap-2 justify-center whitespace-nowrap"
             style={{ willChange: 'opacity, transform' }}
           >
             <span className="font-medium">Secure your place at Nigeria's premier</span>
-            <span className="relative inline-block ml-3 text-left">
+            <span className="relative inline-block ml-2 text-left">
+              {/* reserve width using the longest phrase to prevent clipping or layout shift */}
+              <span className="invisible absolute left-0 top-0">{reserveText}</span>
               <motion.span
                 key={rotIndex}
                 initial={{ opacity: 0, y: 4 }}
@@ -98,6 +101,7 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.6 }}
                 className="inline-block font-semibold"
+                style={{ display: 'inline-block' }}
               >
                 {rotatingPhrases[rotIndex]}
               </motion.span>
