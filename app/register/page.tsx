@@ -264,10 +264,12 @@ export default function RegisterPage() {
           subtitle="Secure your place at Nigeria's premier pre-retirement summit"
         />
 
-        <section className="py-16 bg-gray-50">
+        <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <RegistrationIndicator />
+              <div className="flex justify-center">
+                <RegistrationIndicator />
+              </div>
               {/* Form Introduction */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
