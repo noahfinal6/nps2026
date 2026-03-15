@@ -11,20 +11,12 @@ export function HeroSection() {
 	const slideshowImages = optimizedImages
 
 	const [currentIndex, setCurrentIndex] = useState(0)
-	const [isMobile, setIsMobile] = useState(false)
 
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setCurrentIndex((p) => (p + 1) % slideshowImages.length)
 		}, 6000)
 		return () => clearInterval(interval)
-	}, [])
-
-	useEffect(() => {
-		const onResize = () => setIsMobile(typeof window !== 'undefined' && window.innerWidth < 1024)
-		onResize()
-		window.addEventListener('resize', onResize)
-		return () => window.removeEventListener('resize', onResize)
 	}, [])
 
 	return (
@@ -44,7 +36,7 @@ export function HeroSection() {
 			<div
 				className="absolute inset-0 z-10"
 				style={{
-					background: `linear-gradient(135deg, rgba(1,102,51,${isMobile ? 0.45 : 0.82}) 0%, rgba(204,51,0,${isMobile ? 0.45 : 0.86}) 100%)`,
+					background: `linear-gradient(135deg, rgba(1,102,51,0.82) 0%, rgba(204,51,0,0.86) 100%)`,
 				}}
 			/>
 			{/* Bottom Fade */}
@@ -65,57 +57,46 @@ export function HeroSection() {
 			{/* All Content Inside Hero Section */}
 			<div className="relative z-30 flex-1 flex flex-col justify-center">
 				{/* Main Content - Flex to push buttons down */}
-				<div className="container mx-auto px-4 py-4 md:py-6 w-full">
-					<div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12 w-full">
-						<div className="max-w-4xl flex-1 w-full">
+				<div className="w-full px-0 md:px-4 py-4 md:py-6">
+					<div className="w-full">
 
 
-							{/* Main Heading */}
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.5, delay: 0.05 }}
-								style={{ willChange: 'opacity, transform' }}
-								className="group mb-0"
-							>
-								<h1 className="font-black group leading-none">
-									<div className="flex items-center gap-4 mb-1">
-										<span className="bg-red-700 text-white font-black uppercase px-3 py-1 rounded text-sm md:text-lg tracking-tight">2026 theme:</span>
-										<span className="text-white block text-2xl md:text-5xl lg:text-7xl tracking-tight">Own Your</span>
-									</div>
-									<span className="text-amber-300 block text-4xl md:text-7xl lg:text-9xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
+						{/* Main Heading */}
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5, delay: 0.05 }}
+							style={{ willChange: 'opacity, transform' }}
+							className="group mb-0 mx-0"
+						>
+							<div className="font-black group leading-none">
+								{/* First Row: 2026 Theme and Own Your */}
+								<div className="flex justify-center md:justify-start items-center gap-4 mb-2">
+									<span className="bg-red-700 text-white font-black uppercase px-3 py-1 rounded text-lg md:text-lg tracking-tight">2026 theme:</span>
+									<span className="text-white text-4xl md:text-5xl lg:text-8xl tracking-tight">Own Your</span>
+								</div>
+								{/* Second Row: Retirement */}
+								<div className="text-center md:text-left mb-2">
+									<span className="text-amber-300 text-7xl md:text-7xl lg:text-[10rem] font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
 										Retirement
 									</span>
-									<span className="text-white block text-xl md:text-4xl lg:text-6xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight mt-1">
+								</div>
+								{/* Third Row: From Planning to Action */}
+								<div className="text-center md:text-left">
+									<span className="text-white text-4xl md:text-4xl lg:text-7xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
 										From Planning to Action
 									</span>
-								</h1>
-							</motion.div>
-						</div>
-
-
+								</div>
+							</div>
+						</motion.div>
 					</div>
+
+
 				</div>
 
-				{/* Marquee - Inside Hero Section, After Text, No Extra Padding */}
-				<motion.div
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ duration: 0.5, delay: 0.2 }}
-					className="w-screen relative left-1/2 -translate-x-1/2 bg-yellow-400 py-2 md:py-3 overflow-hidden"
-					style={{ willChange: 'opacity' }}
-				>
-					{/* badge removed from here to avoid clipping */}
-					<div className="marquee__inner animate-marquee text-gray-900 text-sm md:text-lg font-semibold flex whitespace-nowrap">
-						<span className="pr-8 md:pr-12">Join Africa's premier platform for retirement readiness, financial security, and post-career productivity — Register today to secure your spot.</span>
-						<span className="pr-8 md:pr-12">Join Africa's premier platform for retirement readiness, financial security, and post-career productivity — Register today to secure your spot.</span>
-					</div>
-				</motion.div>
-
-				{/* Buttons - Inside Hero Section, Below Marquee */}
-				{/* Date/Location badge positioned over marquee (top-right) */}
-				<div className="absolute z-30 right-4 md:right-8 top-[56%] md:top-[50%] pointer-events-auto">
-					<div className="inline-flex items-center gap-3 px-4 py-3 rounded-lg bg-red-700 text-white font-black text-sm md:text-base shadow-lg">
+				{/* Date and Venue Indicator Bar */}
+				<div className="w-screen relative left-1/2 -translate-x-1/2 md:flex md:justify-end pt-3 pb-0">
+					<div className="flex md:inline-flex items-center gap-3 px-2 md:px-4 py-2 bg-red-700 text-white font-black text-xs md:text-base shadow-lg w-full md:w-auto">
 						<span className="flex items-center gap-3">
 							<Calendar className="w-4 h-4 md:w-5 md:h-5" />
 							<span className="hidden sm:inline">15-16 July 2026</span>
@@ -129,6 +110,23 @@ export function HeroSection() {
 						</span>
 					</div>
 				</div>
+
+				{/* Marquee - Inside Hero Section, After Text, No Extra Padding */}
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5, delay: 0.2 }}
+					className="w-screen relative left-1/2 -translate-x-1/2 bg-yellow-400 pt-2 pb-2 md:pb-3 overflow-hidden"
+					style={{ willChange: 'opacity' }}
+				>
+					{/* badge removed from here to avoid clipping */}
+					<div className="marquee__inner animate-marquee text-gray-900 text-sm md:text-lg font-semibold flex whitespace-nowrap">
+						<span className="pr-8 md:pr-12">Join Africa's premier platform for retirement readiness, financial security, and post-career productivity — Register today to secure your spot.</span>
+						<span className="pr-8 md:pr-12">Join Africa's premier platform for retirement readiness, financial security, and post-career productivity — Register today to secure your spot.</span>
+					</div>
+				</motion.div>
+
+				{/* Buttons - Inside Hero Section, Below Marquee */}
 				<div className="container mx-auto px-4 py-2 md:py-3 relative z-30">
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
@@ -139,7 +137,7 @@ export function HeroSection() {
 					>
 						<Link
 							href="/register"
-							className="bg-gradient-to-r from-emerald-500 to-orange-400 hover:from-emerald-600 hover:to-orange-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-base md:text-lg text-center shadow-lg transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 w-full sm:w-auto"
+							className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-base md:text-lg text-center shadow-lg transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 w-full sm:w-auto"
 						>
 							Register Now
 							<ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
