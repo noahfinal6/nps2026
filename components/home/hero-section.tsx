@@ -96,15 +96,15 @@ export function HeroSection() {
 
 				{/* Date and Venue Indicator Bar */}
 				<div className="w-screen relative left-1/2 -translate-x-1/2 md:flex md:justify-end pt-3 pb-0">
-					<div className="flex md:inline-flex items-center gap-3 px-2 md:px-4 py-2 bg-red-700 text-white font-black text-xs md:text-base shadow-lg w-full md:w-auto">
-						<span className="flex items-center gap-3">
-							<Calendar className="w-4 h-4 md:w-5 md:h-5" />
+					<div className="flex md:inline-flex items-center gap-2 px-1 md:px-4 py-2 bg-red-700 text-white font-black text-[10px] md:text-base shadow-lg w-full md:w-auto flex-wrap justify-center md:justify-start">
+						<span className="flex items-center gap-2">
+							<Calendar className="w-3 h-3 md:w-5 md:h-5" />
 							<span className="hidden sm:inline">15-16 July 2026</span>
 							<span className="sm:hidden">Jul 15-16</span>
 						</span>
 						<span className="w-1 h-1 rounded-full bg-white/50" />
-						<span className="flex items-center gap-3">
-							<MapPin className="w-4 h-4 md:w-5 md:h-5" />
+						<span className="flex items-center gap-2">
+							<MapPin className="w-3 h-3 md:w-5 md:h-5" />
 							<span className="hidden sm:inline">Shehu Musa Yar-Aduas Center CBD</span>
 							<span className="sm:hidden">Musa Yar Aduas</span>
 						</span>
